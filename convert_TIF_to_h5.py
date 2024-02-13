@@ -14,7 +14,7 @@ import subprocess
 
 
 #Set location of folder with images
-indir = 'C:/Users/olsen/Desktop/test/raw_images/'
+indir = 'C:/Users/user_name/Desktop/test/raw_images/'
 #Get all files in selected folder 
 infiles = os.listdir(indir)
 
