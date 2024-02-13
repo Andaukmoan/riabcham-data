@@ -67,14 +67,14 @@ print("Start segmentation")
 #Set location of ilastik exe file
 ilastik_location = 'C:/Program Files/ilastik-1.4.0/'
 #Set location of ilastik project
-ilastik_project_DDX4 = 'C:/Users/user_name/Desktop/pipeline_v6.1/segmentation_v2_3.ilp'
+ilastik_project = 'C:/Users/user_name/Desktop/pipeline_v6.1/segmentation_v2_3.ilp'
 #Get all files in selected folder 
 inputfiles = os.listdir(indir)
 #Set directory to location of ilastik exe file
 os.chdir(ilastik_location)
 
 #Define function for segmenting DDX4 files
-def execute_DDX4():
+def execute_segmentation():
     for infile in inputfiles:
     #Exclude files that are not h5 format from processing
         if infile[-5:] != 'd2.h5':
@@ -82,7 +82,7 @@ def execute_DDX4():
             continue
     #Set variables for ilastik subprocess
         command = '.\ilastik.exe --headless --project="%s" --export_source="Simple Segmentation" --output_filename_format="%s/{nickname}_Simple_Segmentation.tiff"  --raw_data="%s%s"' % (
-            ilastik_project_DDX4,
+            ilastik_project,
             indir,
             indir,
             infile)
@@ -92,11 +92,11 @@ def execute_DDX4():
 
 
 if __name__ == "__main__":    
-    # Execute execute_DDX4 on a thread (concurrently)
-    a = threading.Thread(target=execute_DDX4)
+    # Execute execute_segmentation on a thread (concurrently)
+    a = threading.Thread(target=execute_segmentation)
     a.start()
 
-    # Block main execution until execute_DDX4 is terminated
+    # Block main execution until execute_segmentation is terminated
     a.join()
     
 os.chdir(start_dir)
