@@ -1,3 +1,5 @@
+#Convert folder of single page TIF files to h5 format.
+
 #Import modules for converting tif to h5
 from PIL import Image
 import numpy as np
