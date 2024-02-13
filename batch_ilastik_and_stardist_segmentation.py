@@ -1,3 +1,7 @@
+#Script to process a folder of images with a nuclei channel (d0) and a cytoplasm channel (d2). 
+#Returns an image of ROIs for nuclei that can be imported into cellprofiler as objects.
+#Returns a binary image of pixels associated with cytoplasm that can be used to identify secondary objects in cellprofiler.
+
 #Import modules for converting tif to h5
 from PIL import Image
 import numpy as np
