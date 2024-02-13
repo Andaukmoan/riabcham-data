@@ -37,6 +37,10 @@ def execute_conversion():
         img = Image.open(input)
         #Convert image to numpy array
         img_array = np.asarray(img)
+        #Add tzc dimensions
+        img_array = np.expand_dims(img_array, axis=0)
+        img_array = np.expand_dims(img_array, axis=0)
+        img_array = np.expand_dims(img_array, axis=-1)
         #Remove file suffix from name
         outfile = input[:-4]
         #Create empty h5 file
