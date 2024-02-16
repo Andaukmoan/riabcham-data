@@ -27,6 +27,8 @@ pip install stardist
 
 See [stardist repository](https://github.com/stardist/stardist) for more details on setting up stardist.
 
+*If using Windows, download python from the [website](https://www.python.org/downloads/). The microsoft store installation does not properly set up pip.
+
 **RStudio**
 
 Instructions on setting up RStudio can be found [here](https://rstudio-education.github.io/hopr/starting.html).
