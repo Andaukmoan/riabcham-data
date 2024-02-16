@@ -8,6 +8,8 @@ This repository is for files related to my cellprofiler pipeline.
 
 Download and install cellprofiler (v4.2.6) from their website. [link](https://cellprofiler.org/)
 
+Set location of classifier models in "ClassifyObjects" module to location on your machine.
+
 **Required Python Packages**
 1. Pillow
 
