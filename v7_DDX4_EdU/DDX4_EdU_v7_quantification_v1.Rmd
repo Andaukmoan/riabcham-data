@@ -134,7 +134,7 @@ somatic[somatic[,4]<0,] <- 0
 ```{r}
 #Save per image data
 
-df <- cbind(somatic[c(1,2,4)],somatic_edu[,3] (txrd[,3]-cyto[,3]),cyto[,3],double[,3],(double[,3]/cyto[,3]*100))
+df <- cbind(somatic[c(1,2,4)],somatic_edu[,3], (txrd[,3]-cyto[,3]),cyto[,3],double[,3],(double[,3]/cyto[,3]*100))
 colnames(df) <- c("Plate", "Well","Somatic", "Somatic/EdU","Dead_DDX4","cytoDDX4","DDX4/EdU","Percent_Double")
 df[is.na(df["Percent_Double"]),"Percent_Double"] <- 0
 

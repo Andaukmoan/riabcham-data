@@ -10,7 +10,7 @@
 
 ### 2. Segment DNA with stardist:
 
-  a. Open “stardist_v1.rmd” in v7_DDX4_EdU folder on the desktop.
+  a. Open “stardist_v1.rmd” in v7_ACRV1_EdU folder on the desktop.
   
   b. Select “Run” and then “Run All”.
   
@@ -24,7 +24,7 @@
 
   a. Open up CellProfiler.
 
-  b. Go to file->open project and open “DDX4_EdU_v7.cpproj” in the v7_DDX4_EdU folder on the desktop.
+  b. Go to file->open project and open “ACRV1_EdU_v7.cpproj” in the v7_ACRV1_EdU folder on the desktop.
 
   c. Drag and drop the folder(s) with your images into the images module. There should be four types of images.
     
@@ -32,7 +32,7 @@
 
       2. EdU (d1.TIF)
 
-      3. DDX4 (d2.TIF)
+      3. ACRV1 (d2.TIF)
 
       4. Nuclei segmentation (labels.tif)
 
@@ -46,13 +46,13 @@
 
 ### Format CellProfiler results with R:
 
-  a. Open up “DDX4_EdU_v7_quantification_v1.Rmd” in the v7_DDX4_EdU folder on the desktop.
+  a. Open up “ACRV1_EdU_v7_quantification_v1.Rmd” in the v7_ACRV1_EdU folder on the desktop.
 
   b. Select “Run” and then “Run All”.
 
   c. A popup window will open. Select your database file (this will be saved in the location you chose in cellprofiler and have the name you gave it with a “.db” suffix) and then click “Open”.
 
-  d. The output will be saved in the v7_DDX4_EdU folder on the desktop as an excel file. There will be a separate file for each unique plate name. Move the output to the location you would like to store it long term.
+  d. The output will be saved in the v7_ACRV1_EdU folder on the desktop as an excel file. There will be a separate file for each unique plate name. Move the output to the location you would like to store it long term.
 
   e. There will be four files per plate:
 
