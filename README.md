@@ -33,6 +33,8 @@ See [stardist repository](https://github.com/stardist/stardist) for more details
 
 Instructions on setting up RStudio can be found [here](https://rstudio-education.github.io/hopr/starting.html).
 
+Set the "use_python" function to the location of python on your machine in stardist_v1.rmd.
+
 Go [here](https://github.com/ttimbers/intro-to-reticulate/blob/main/setup-instructions/macos_install_python.md) for troubleshooting issues with the reticulate package.
 
 This pipeline should work on python >= 3.8. I used 3.8 for compatibility with cellprofiler v4.2.6 although cellprofiler v5 will be >= 3.9.
