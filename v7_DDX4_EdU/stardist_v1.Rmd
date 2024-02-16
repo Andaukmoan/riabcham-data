@@ -64,7 +64,7 @@ model = StarDist2D.from_pretrained('2D_versatile_fluo')
 def execute_script(name):
         os.system('python ' + name)
 
-#Creat function for segmenting nuclei with stardist
+#Create function for segmenting nuclei with stardist
 def execute_segment_nuclei():
     print("Starting nuclei segmentation")
     for infile in infiles:
