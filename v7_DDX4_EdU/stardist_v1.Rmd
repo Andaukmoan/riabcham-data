@@ -98,4 +98,3 @@ execute_segment_nuclei()
 exit
 #Need to restart r after closing connection in order to reopen connection
 ```
-
