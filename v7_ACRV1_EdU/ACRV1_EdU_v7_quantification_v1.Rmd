@@ -175,7 +175,7 @@ apply_plate <- function(a="df", b="Image_Metadata_Plate",d="Function", c="Well",
 
 ```{r}
 #Sum somatic cells per well per plate
-somatic <- apply_plate(a=somatic,b="Image_Metadata_Plate",d=sum_well, c="Image_Metadata_Well", e=c("Metadata_Plate","Metadata_Well","Count_TotalCells"), f = "Image_Count_TotalCells")
+somatic <- apply_plate(a=somatic,b="Image_Metadata_Plate",d=sum_well, c="Image_Metadata_Well", e=c("Metadata_Plate","Metadata_Well","Count_TotalCells"), f = "Image_Count_Filtered_nuclei")
 #Sum Txrd-/EdU+ cells per well per plate
 somatic_edu <- apply_plate(a=somatic_edu,b="Image_Metadata_Plate",d=sum_well, c="Image_Metadata_Well", e=c("Metadata_Plate","Metadata_Well","Count_edu"), f = "Image_Count_Filtered_somatics")
 #Sum double positive cells per well per plate
