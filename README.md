@@ -8,6 +8,8 @@ This repository is for files related to my cellprofiler pipeline.
 
 Download and install cellprofiler (v4.2.6) from their website. [link](https://cellprofiler.org/)
 
+Set location of classifier models in "ClassifyObjects" module to location on your machine.
+
 **Required Python Packages**
 1. Pillow
 
@@ -26,6 +28,8 @@ pip install stardist
 ```
 
 See [stardist repository](https://github.com/stardist/stardist) for more details on setting up stardist.
+
+Stardist has trouble installing on Mac M1/M2 systems. See [stardist issue #19](https://github.com/stardist/stardist/issues/19).
 
 *If using Windows, download python from the [website](https://www.python.org/downloads/). The microsoft store installation does not properly set up pip.
 
