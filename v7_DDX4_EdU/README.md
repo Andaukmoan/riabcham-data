@@ -20,7 +20,7 @@
   
   e. This will take ~2.7 seconds per image.
 
-### Run CellProfiler:
+### 3. Run CellProfiler:
 
   a. Open up CellProfiler.
 
@@ -44,7 +44,7 @@
 
   g. This will take ~17 seconds per image set.
 
-### Format CellProfiler results with R:
+### 4. Format CellProfiler results with R:
 
   a. Open up “DDX4_EdU_v7_quantification_v1.Rmd” in the v7_DDX4_EdU folder on the desktop.
 
@@ -52,9 +52,11 @@
 
   c. A popup window will open. Select your database file (this will be saved in the location you chose in cellprofiler and have the name you gave it with a “.db” suffix) and then click “Open”.
 
-  d. The output will be saved in the v7_DDX4_EdU folder on the desktop as an excel file. There will be a separate file for each unique plate name. Move the output to the location you would like to store it long term.
+  d. Another popup window will open asking if you have files from CPA that you would like to use. Type "Yes" if you do or "No" if you don't.
 
-  e. There will be four files per plate:
+  e. The output will be saved in the v7_DDX4_EdU folder on the desktop as an excel file. There will be a separate file for each unique plate name. Move the output to the location you would like to store it long term.
+
+  f. There will be four files per plate:
 
     1. Raw cell counts
     
