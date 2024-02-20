@@ -29,6 +29,8 @@ pip install stardist
 
 See [stardist repository](https://github.com/stardist/stardist) for more details on setting up stardist.
 
+Stardist has trouble installing on Mac M1/M2 systems. See [stardist issue #19](https://github.com/stardist/stardist/issues/19).
+
 *If using Windows, download python from the [website](https://www.python.org/downloads/). The microsoft store installation does not properly set up pip.
 
 **RStudio**
