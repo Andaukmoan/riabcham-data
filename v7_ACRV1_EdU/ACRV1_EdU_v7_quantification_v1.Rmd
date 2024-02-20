@@ -364,17 +364,6 @@ output <- rbind(output,colonies)
 ```
 
 ```{r}
-#Open data base connection
-#con <- dbConnect(RSQLite::SQLite(), database.path)
-#Get list of tables
-#Tables <- as.data.frame(dbListTables(con))
-#Get name of data frame with per image counts
-#Table <- as.data.frame(grep("Per_Image", Tables[,1], value = TRUE))
-#Table <- as.data.frame(grep("Per_Image_", Table[,1], value = TRUE, invert = TRUE))
-#Create new object with data frame of per image counts
-#image.data <- dbReadTable(con, Table[[1]])
-#Close connection to data base
-#dbDisconnect(con)
 
 #Add plate and well metadata columns
 df <- cbind(0,0,output)
@@ -382,14 +371,14 @@ colnames(df) <- c("Metadata_Plate","Metadata_Well", colnames(output))
 
 #Add plate and well values based on image number
 for (i in 1:length(df[[1]])){
-df[i,c("Metadata_Plate","Metadata_Well")] <- Per_Image[df[i,"ImageNumber"]==Per_Image[,"ImageNumber"], c("Image_Metadata_Plate","Image_Metadata_Well")]  
+df[i,c("Metadata_Plate","Metadata_Well")] <- image.data[df[i,"ImageNumber"]==image.data[,"ImageNumber"], c("Image_Metadata_Plate","Image_Metadata_Well")]  
 }
 
 #Save data frame missing images
 sdf <- df
 
 #Identify missing images.
-missing <- Per_Image[!Per_Image[,"ImageNumber"] %in% df[,"ImageNumber"],1]
+missing <- image.data[!image.data[,"ImageNumber"] %in% df[,"ImageNumber"],1]
 
 
 if (length(missing) > 1){
@@ -398,7 +387,7 @@ missing <- as.data.frame(missing)
 colnames(missing) <- c("Metadata_Plate","Metadata_Well", colnames(output))
 
 for (i in 1:length(missing[[1]])){
-missing[i,c("Metadata_Plate","Metadata_Well")] <- Per_Image[missing[i,"ImageNumber"]==Per_Image[,"ImageNumber"], c("Image_Metadata_Plate","Image_Metadata_Well")]  
+missing[i,c("Metadata_Plate","Metadata_Well")] <- image.data[missing[i,"ImageNumber"]==image.data[,"ImageNumber"], c("Image_Metadata_Plate","Image_Metadata_Well")]  
 }
 
 df <- rbind(df,missing)
@@ -408,6 +397,7 @@ df <- rbind(df,missing)
 
 
 ```
+
 
 ```{r}
 #Save raw data files per plate.
