@@ -1,7 +1,7 @@
 # riabcham-data
-Prepare data for cellprofiler with stardist
+Prepare data with stardist, quantify with CellProfiler, and format excel sheet with counts.
 
-This repository is for files related to my cellprofiler pipeline.
+This repository is for files related to my cellprofiler image analysis pipeline.
 
 # Setup
 **Cellprofiler**
@@ -43,8 +43,18 @@ Go [here](https://github.com/ttimbers/intro-to-reticulate/blob/main/setup-instru
 
 This pipeline should work on python >= 3.8. I used 3.8 for compatibility with cellprofiler v4.2.6 although cellprofiler v5 will be >= 3.9.
 
+**ImageJ**
 
+We are currently having issues with the stardist python package on Mac M1 computers. We can also run stardist through Fiji. An imageJ macro for running stardist can be found in the Imagej_macro folder.
 
+Download Fiji (Fiji is just imageJ) from [here](https://imagej.net/software/fiji/downloads).
 
-*The current pipeline no longer uses ilastik. See original version for TIF to h5 conversion and running ilastik.
+Install stardist plugin from [here](https://imagej.net/plugins/stardist).
 
+After installing stardist plugin:
+
+1. Select Tensorflow version 1.12 from Edit > Options > Tensorflow.
+
+2. Restart FIJI. 
+
+(see [forum](https://forum.image.sc/t/fiji-crashing-upon-running-stardist-in-mac/47507) for more details)
