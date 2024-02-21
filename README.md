@@ -1,5 +1,5 @@
 # riabcham-data
-Prepare data for cellprofiler
+Prepare data for cellprofiler with stardist
 
 This repository is for files related to my cellprofiler pipeline.
 
