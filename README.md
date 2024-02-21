@@ -51,7 +51,7 @@ Download Fiji (Fiji is just imageJ) from [here](https://imagej.net/software/fiji
 
 Install stardist plugin from [here](https://imagej.net/plugins/stardist).
 
-After installing stardist plugin:
+For Mac M1 computers after installing stardist plugin:
 
 1. Select Tensorflow version 1.12 from Edit > Options > Tensorflow.
 
