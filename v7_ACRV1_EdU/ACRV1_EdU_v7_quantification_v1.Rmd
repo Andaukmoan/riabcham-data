@@ -88,6 +88,7 @@ double <- double[order(double[,"Image_Metadata_Plate"]),]
 ```{r}
 #Calculate somatic cell number
 somatic[,4] <- somatic[,3]-somatic_edu[,3]
+somatic[,4] <- somatic[,4] - ACRV1[,3]
 ```
 
 ```{r}
@@ -108,8 +109,8 @@ if (length(check_somatic) >0 ){
 ```{r}
 #Save per image data
 
-df <- cbind(somatic[c(1,2,4)],somatic_edu[,3], ACRV1[,3],double[,3],(double[,3]/ACRV1[,3]*100))
-colnames(df) <- c("Plate", "Well","Somatic", "Somatic/EdU", "ACRV1","ACRV1/EdU","Percent_Double")
+df <- cbind(somatic[c(1,2,3,4)],somatic_edu[,3], ACRV1[,3],double[,3],(double[,3]/ACRV1[,3]*100))
+colnames(df) <- c("Plate", "Well", "TotalCells","ACRV1-/EdU-", "ACRV1-/EdU+", "ACRV1+","ACRV1+/EdU+","Percent_Double")
 df[is.na(df["Percent_Double"]),"Percent_Double"] <- 0
 
 #Subset out plates
@@ -127,7 +128,7 @@ names(per_plate) <- u.Plate[,1]
 for (i in 1:length(per_plate)){
   file <- paste0(u.Plate[i,1],"_per_image_ACRV1EdUv7_quantification.xlsx")
   save <- per_plate[[i]]
-  write.xlsx(save,file)
+  write.xlsx(save,file,row.names=FALSE)
 }
 ```
 
@@ -194,12 +195,13 @@ ACRV1 <- apply_plate(a=ACRV1,b="Image_Metadata_Plate",d=sum_well, c="Image_Metad
 ```{r}
 #Calculate somatic cells per well
 somatic["Somatic_Count"] <- somatic$Count_TotalCells - somatic_edu$Count_edu
+somatic["Somatic_Count"] <- somatic$Count_TotalCells - ACRV1$Count_ACRV1
 ```
 
 ```{r}
 #Combine data sets and resolve NaN
-df <- cbind(somatic[c(1,2,4)], somatic_edu$Count_edu,ACRV1[,3],double[,3],(double[,3]/ACRV1[,3]*100))
-colnames(df) <- c("Plate", "Well","Somatic", "Somatic/EdU","ACRV1","ACRV1/EdU","Percent_Double")
+df <- cbind(somatic[c(1,2,3, 4)], somatic_edu$Count_edu,ACRV1[,3],double[,3],(double[,3]/ACRV1[,3]*100))
+colnames(df) <- c("Plate", "Well", "TotalCells","ACRV1-/EdU-", "ACRV1-/EdU+", "ACRV1+","ACRV1+/EdU+","Percent_Double")
 df[is.na(df["Percent_Double"]),"Percent_Double"] <- 0
 
 ```
@@ -226,7 +228,7 @@ counts_per_plate <- per_plate
 for (i in 1:length(per_plate)){
   file <- paste0(u.Plate[i,1],"_ACRV1EdUv7_quantification.xlsx")
   save <- per_plate[[i]]
-  write.xlsx(save,file)
+  write.xlsx(save,file, row.names=FALSE)
 }
 
 #write.xlsx(save, file)
