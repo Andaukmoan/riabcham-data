@@ -1,0 +1,3 @@
+IF (IdentifySecondaryObjects_RadialDistribution_MeanFrac_EdU_3of7 > 1.4810161858797026, [0.9615383079446591, -0.9615383079446591], [-1.000000034198165, 1.000000034198165])
+IF (IdentifySecondaryObjects_Intensity_IntegratedIntensityEdge_EdU > 0.42165255919098854, [0.794074231690683, -0.794074231690683], [-1.0, 1.0])
+IF (IdentifySecondaryObjects_RadialDistribution_MeanFrac_EdU_3of7 > 1.4810161858797026, [0.8266658229514904, -0.8266658229514904], [-1.0, 1.0])
