@@ -37,8 +37,8 @@ if (cpa_file_answer == "Yes"){
 #Choose path to cytoplasmic DDX4+ counts files.
 cyto_path <- rstudioapi::selectFile(caption = "Select cytoDDX4 counts file")
 
-#Choose path to cytoplasmic DDX4+ / EdU+ counts files.
-double_path <- rstudioapi::selectFile(caption = "Select cytoDDX4/EdU counts file")
+#Choose path to cytoplasmic DDX4+ / SSEA4+ counts files.
+double_path <- rstudioapi::selectFile(caption = "Select cytoDDX4/SSEA4 counts file")
 
 #cyto_path
 #double_path  
@@ -78,17 +78,14 @@ double <- read.csv(double_path)
 
 ```{r}
 #Subset relevant columns
-#image.data <- image.data[c("Image_Metadata_Plate","Image_Metadata_Well","Image_Count_TotalCells","Image_Count_RelateObjectsTxRd", "Image_Count_cytoDDX4","Image_Count_cytoDDX4_EdU")]
 somatic <- image.data[c("Image_Metadata_Plate","Image_Metadata_Well","Image_Count_Filtered_nuclei")]
-txrd <- image.data[c("Image_Metadata_Plate","Image_Metadata_Well","Image_Count_Combined_DDX4")]
-somatic_edu <- image.data[c("Image_Metadata_Plate","Image_Metadata_Well","Image_Count_Filtered_somatics")]
 
 if (cpa_file_answer == "Yes"){
 cyto <- cyto[c("Image_Metadata_Plate", "Image_Metadata_Well", "Positive..Cell.Count")]
 double <- double[c("Image_Metadata_Plate", "Image_Metadata_Well", "Positive..Cell.Count")]  
 }else{
-cyto <- image.data[c("Image_Metadata_Plate","Image_Metadata_Well","Image_Count_CombinedObjects")]
-double <- image.data[c("Image_Metadata_Plate","Image_Metadata_Well","Image_Count_cytoDDX4_EdU")]  
+cyto <- image.data[c("Image_Metadata_Plate","Image_Metadata_Well","Image_Count_cytoDDX4")]
+double <- image.data[c("Image_Metadata_Plate","Image_Metadata_Well","Image_Count_cytoDDX4_SSEA4")]  
 }
 ```
 
@@ -96,14 +93,10 @@ double <- image.data[c("Image_Metadata_Plate","Image_Metadata_Well","Image_Count
 #Reorder data (just in case)
 #Order by well
 somatic <- somatic[order(somatic[,"Image_Metadata_Well"]),]
-txrd <- txrd[order(txrd[,"Image_Metadata_Well"]),]
-somatic_edu <- somatic_edu[order(somatic_edu[,"Image_Metadata_Well"]),]
 cyto <- cyto[order(cyto[,"Image_Metadata_Well"]),]
 double <- double[order(double[,"Image_Metadata_Well"]),]
 #Order by plate
 somatic <- somatic[order(somatic[,"Image_Metadata_Plate"]),]
-txrd <- txrd[order(txrd[,"Image_Metadata_Plate"]),]
-somatic_edu <- somatic_edu[order(somatic_edu[,"Image_Metadata_Plate"]),]
 cyto <- cyto[order(cyto[,"Image_Metadata_Plate"]),]
 double <- double[order(double[,"Image_Metadata_Plate"]),]
 
@@ -111,31 +104,20 @@ double <- double[order(double[,"Image_Metadata_Plate"]),]
 
 ```{r}
 #Calculate somatic cell number
-somatic[,4] <- somatic[,3]-txrd[,3]
-somatic[,4] <- somatic[,4]-somatic_edu[,3]
-#Calculate dead DDX4 per well
-txrd["Dead_DDX4"] <- txrd[,3] - cyto[,3]
+somatic[,4] <- somatic[,3]-cyto[,3]
 ```
 
 ```{r}
 #Check for inconsistencies between group and subgroup
 check_somatic <- somatic[somatic[,4]<0,]
 check_cyto <- cyto[cyto[,3]<double[,3],]
-check_txrd <- txrd[txrd[,4] < 0,]
-```
-
-```{r}
-#Replace inconsistencies with subgroup value
-#cyto[cyto[,3]<double[,3],3] <- double[cyto[,3]<double[,3],3]
-#txrd[txrd[,3] < cyto[,3],3] <- cyto[txrd[,3] < cyto[,3],3]
-#somatic[somatic[,4]<0,] <- 0
 ```
 
 ```{r}
 #Save per image data
 
-df <- cbind(somatic[c(1,2,4)],somatic_edu[,3], (txrd[,3]-cyto[,3]),cyto[,3],double[,3],(double[,3]/cyto[,3]*100))
-colnames(df) <- c("Plate", "Well","Somatic", "Somatic/EdU","Dead_DDX4","cytoDDX4","DDX4/EdU","Percent_Double")
+df <- cbind(somatic[c(1,2,4)],cyto[,3],double[,3],(double[,3]/cyto[,3]*100))
+colnames(df) <- c("Plate", "Well","Somatic","cytoDDX4","DDX4/SSEA4","Percent_Double")
 df[is.na(df["Percent_Double"]),"Percent_Double"] <- 0
 
 #Subset out plates
@@ -151,7 +133,7 @@ names(per_plate) <- u.Plate[,1]
 
 #Save data sets
 for (i in 1:length(per_plate)){
-  file <- paste0(u.Plate[i,1],"_per_image_DDX4EdUv7_quantification.xlsx")
+  file <- paste0(u.Plate[i,1],"_per_image_DDX4SSEA4v7_quantification.xlsx")
   save <- per_plate[[i]]
   write.xlsx(save,file)
 }
@@ -202,10 +184,6 @@ apply_plate <- function(a="df", b="Image_Metadata_Plate",d="Function", c="Well",
 ```{r}
 #Sum somatic cells per well per plate
 somatic <- apply_plate(a=somatic,b="Image_Metadata_Plate",d=sum_well, c="Image_Metadata_Well", e=c("Metadata_Plate","Metadata_Well","Count_TotalCells"), f = "Image_Count_Filtered_nuclei")
-#Sum Txrd+ cells per well per plate
-txrd <- apply_plate(a=txrd,b="Image_Metadata_Plate",d=sum_well, c="Image_Metadata_Well", e=c("Metadata_Plate","Metadata_Well","Count_txrd"), f = "Image_Count_Combined_DDX4")
-#Sum Txrd-/EdU+ cells per well per plate
-somatic_edu <- apply_plate(a=somatic_edu,b="Image_Metadata_Plate",d=sum_well, c="Image_Metadata_Well", e=c("Metadata_Plate","Metadata_Well","Count_edu"), f = "Image_Count_Filtered_somatics")
 
 if (cpa_file_answer == "Yes"){
 #Sum cytoDD4+ cells per well per plate
@@ -214,26 +192,23 @@ cyto <- apply_plate(a=cyto,b="Image_Metadata_Plate",d=sum_well, c="Image_Metadat
 double <- apply_plate(a=double,b="Image_Metadata_Plate",d=sum_well, c="Image_Metadata_Well", e=c("Metadata_Plate","Metadata_Well","Count_double"), f = "Positive..Cell.Count")  
 }else{
 #Sum cytoDD4+ cells per well per plate
-cyto <- apply_plate(a=cyto,b="Image_Metadata_Plate",d=sum_well, c="Image_Metadata_Well", e=c("Metadata_Plate","Metadata_Well","Count_cyto"), f = "Image_Count_CombinedObjects")
+cyto <- apply_plate(a=cyto,b="Image_Metadata_Plate",d=sum_well, c="Image_Metadata_Well", e=c("Metadata_Plate","Metadata_Well","Count_cyto"), f = "Image_Count_cytoDDX4")
 #Sum double positive cells per well per plate
-double <- apply_plate(a=double,b="Image_Metadata_Plate",d=sum_well, c="Image_Metadata_Well", e=c("Metadata_Plate","Metadata_Well","Count_double"), f = "Image_Count_cytoDDX4_EdU")  
+double <- apply_plate(a=double,b="Image_Metadata_Plate",d=sum_well, c="Image_Metadata_Well", e=c("Metadata_Plate","Metadata_Well","Count_double"), f = "Image_Count_cytoDDX4_SSEA4")  
 }
 ```
 
 
 ```{r}
 #Calculate somatic cells per well
-somatic["Somatic_Count"] <- somatic$Count_TotalCells - txrd$Count_txrd
-somatic["Somatic_Count"] <- somatic$Somatic_Count - somatic_edu$Count_edu
-#Calculate dead DDX4 per well
-txrd["Dead_DDX4"] <- txrd$Count_txrd - cyto$Count_cyto
+somatic["Somatic_Count"] <- somatic$Count_TotalCells - cyto$Count_cyto
 
 ```
 
 ```{r}
 #Combine data sets and resolve NaN
-df <- cbind(somatic[c(1,2,4)], somatic_edu$Count_edu, (txrd[,3]-cyto[,3]),cyto[,3],double[,3],(double[,3]/cyto[,3]*100))
-colnames(df) <- c("Plate", "Well","Somatic", "Somatic/EdU","Dead_DDX4","cytoDDX4","DDX4/EdU","Percent_Double")
+df <- cbind(somatic[c(1,2,4)], cyto[,3],double[,3],(double[,3]/cyto[,3]*100))
+colnames(df) <- c("Plate", "Well","Somatic","cytoDDX4","DDX4/SSEA4","Percent_Double")
 df[is.na(df["Percent_Double"]),"Percent_Double"] <- 0
 
 ```
@@ -258,7 +233,7 @@ counts_per_plate <- per_plate
 ```{r}
 #Save data sets
 for (i in 1:length(per_plate)){
-  file <- paste0(u.Plate[i,1],"_DDX4EdUv7_quantification.xlsx")
+  file <- paste0(u.Plate[i,1],"_DDX4SSEA4v7_quantification.xlsx")
   save <- per_plate[[i]]
   write.xlsx(save,file)
 }
@@ -269,10 +244,13 @@ for (i in 1:length(per_plate)){
 
 
 
+```{r}
+
+```
 
 
 #Process colony counts
-```{r}
+```{r, eval = FALSE }
 #Open data base connection
 con <- dbConnect(RSQLite::SQLite(), database.path)
 #Get list of tables
@@ -285,7 +263,7 @@ Per_RelationshipsView <- dbReadTable(con, Table[1,1])
 dbDisconnect(con)
 ```
 
-```{r, warning = FALSE}
+```{r, warning = FALSE,eval = FALSE }
 #This code is really gross. I am so sorry I did not document it better. I could not find a good way to do this, so I took a very round about way that is long and clunky and gives a ton of warning messages because I coerce the living daylights out of the data.
 
 #Get Neighbor relationships
@@ -397,7 +375,7 @@ output <- rbind(output,colonies)
 }
 ```
 
-```{r}
+```{r,eval = FALSE }
 
 #Add plate and well metadata columns
 df <- cbind(0,0,output)
@@ -432,7 +410,7 @@ df <- rbind(df,missing)
 
 ```
 
-```{r}
+```{r,eval = FALSE }
 #Save raw data files per plate.
 #Create list with a data frame for each plate.
 u.Plate <- as.data.frame(unique(df["Metadata_Plate"]))
@@ -462,7 +440,7 @@ lapply(1:length(per_plate), function(a) write.xlsx(per_plate[[a]],
 #sdf <- sdf[sdf["colony_size"]>2,]
 ```
 
-```{r}
+```{r,eval = FALSE }
 #Create functions
 
 #Sum number of colonies per well
@@ -518,7 +496,7 @@ apply_plate2 <- function(a="df", b="Plate",d="Function", c="Well", e="Column Nam
 ```
 
 
-```{r}
+```{r,eval = FALSE }
 #Set column names
 column_names <- c("Metadata_Plate","Metadata_Well", "Colony_Count","Colony_Min","Colony_1st_Q","Colony_Median","Colony_Mean","Colony_3rd_Q","Colony_Max")
 #Combine images per well per plate using functions created in previous chunk
@@ -526,7 +504,7 @@ per_well <- apply_plate2(a=sdf, b="Metadata_Plate",c="Metadata_Well",d=sum_well,
 
 ```
 
-```{r}
+```{r,eval = FALSE }
 #Add missing wells
 if (length(missing) >1){
 
@@ -576,7 +554,7 @@ per_plate[[u.missing[i,1]]] <- df
 
 ```
 
-```{r}
+```{r,eval = FALSE }
 #Create single data frame that contains all the information from each plate.
 per_well <- data.frame()
 if (length(per_plate) > 1){
@@ -597,7 +575,7 @@ per_well <- per_well[order(per_well[,"Metadata_Plate"]),]
 ```
 
 
-```{r}
+```{r,eval = FALSE }
 #Save raw data files per plate
 #Create list with a data frame for each plate
 u.Plate <- as.data.frame(unique(per_well["Metadata_Plate"]))
