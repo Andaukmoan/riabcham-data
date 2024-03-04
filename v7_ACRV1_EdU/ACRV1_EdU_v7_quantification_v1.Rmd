@@ -31,6 +31,7 @@ cpa_file_answer <- rstudioapi::showPrompt("CellProfiler Analyst selection", "Do 
 if (cpa_file_answer == "Yes"){
 #Choose path to ACRV1plasmic ACRV1+ counts files.
 ACRV1_path <- rstudioapi::selectFile(caption = "Select ACRV1 counts file")
+double_path <- rstudioapi::selectFile(caption = "Select double counts file")
 }
 ```
 
@@ -52,21 +53,23 @@ dbDisconnect(con)
 #Open CSV files from CPA.
 if (cpa_file_answer == "Yes"){
 ACRV1 <- read.csv(ACRV1_path)
+double <- read.csv(double_path)
 }
 ```
 
 
 ```{r}
 #Subset relevant columns
-#image.data <- image.data[c("Image_Metadata_Plate","Image_Metadata_Well","Image_Count_TotalCells","Image_Count_RelateObjectsTxRd", "Image_Count_ACRV1","Image_Count_ACRV1_EdU")]
 somatic <- image.data[c("Image_Metadata_Plate","Image_Metadata_Well","Image_Count_Filtered_nuclei")]
 somatic_edu <- image.data[c("Image_Metadata_Plate","Image_Metadata_Well","Image_Count_Filtered_somatics")]
-double <- image.data[c("Image_Metadata_Plate","Image_Metadata_Well","Image_Count_ACRV1_EdU")]
+
 
 if (cpa_file_answer == "Yes"){
 ACRV1 <- ACRV1[c("Image_Metadata_Plate", "Image_Metadata_Well", "Positive..Cell.Count")]
+double <- double[c("Image_Metadata_Plate", "Image_Metadata_Well", "Positive..Cell.Count")]
 }else{
 ACRV1 <- image.data[c("Image_Metadata_Plate","Image_Metadata_Well","Image_Count_ACRV1")]
+double <- image.data[c("Image_Metadata_Plate","Image_Metadata_Well","Image_Count_ACRV1_EdU")]
 }
 ```
 
