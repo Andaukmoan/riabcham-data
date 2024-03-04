@@ -114,6 +114,14 @@ check_cyto <- cyto[cyto[,3]<double[,3],]
 ```
 
 ```{r}
+#Set value of SSEA4/DDX4 double positives that are higher than the DDX4 positive value to the DDX4 positive value.
+#This is mostly for if your counts are from CPA.
+double[cyto[,3]<double[,3],] <- cyto[cyto[,3]<double[,3],]
+
+```
+
+
+```{r}
 #Save per image data
 
 df <- cbind(somatic[c(1,2,4)],cyto[,3],double[,3],(double[,3]/cyto[,3]*100))
