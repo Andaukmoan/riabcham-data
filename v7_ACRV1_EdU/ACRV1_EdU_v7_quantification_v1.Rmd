@@ -29,7 +29,7 @@ cpa_file_answer <- rstudioapi::showPrompt("CellProfiler Analyst selection", "Do 
 
 ```{r}
 if (cpa_file_answer == "Yes"){
-#Choose path to ACRV1plasmic ACRV1+ counts files.
+#Choose path to ACRV1+ counts files.
 ACRV1_path <- rstudioapi::selectFile(caption = "Select ACRV1 counts file")
 double_path <- rstudioapi::selectFile(caption = "Select double counts file")
 }
@@ -186,7 +186,7 @@ somatic_edu <- apply_plate(a=somatic_edu,b="Image_Metadata_Plate",d=sum_well, c=
 double <- apply_plate(a=double,b="Image_Metadata_Plate",d=sum_well, c="Image_Metadata_Well", e=c("Metadata_Plate","Metadata_Well","Count_double"), f = "Image_Count_ACRV1_EdU")
 
 if (cpa_file_answer == "Yes"){
-#Sum ACRV1DD4+ cells per well per plate
+#Sum ACRV1 cells per well per plate
 ACRV1 <- apply_plate(a=ACRV1,b="Image_Metadata_Plate",d=sum_well, c="Image_Metadata_Well", e=c("Metadata_Plate","Metadata_Well","Count_ACRV1"), f = "Positive..Cell.Count")
 }else{
 #Sum ACRV1DD4+ cells per well per plate
