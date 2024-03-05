@@ -62,4 +62,8 @@
     
     2. Cell counts per well
 
+    3. Raw colony counts
+
+    4. Colony counts per well
+
 ### Put a copy of the output onto the lab google drive (lab resources->experiment tracking->quantification->your experiment name).
