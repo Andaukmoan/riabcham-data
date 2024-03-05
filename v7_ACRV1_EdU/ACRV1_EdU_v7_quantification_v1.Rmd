@@ -182,15 +182,18 @@ apply_plate <- function(a="df", b="Image_Metadata_Plate",d="Function", c="Well",
 somatic <- apply_plate(a=somatic,b="Image_Metadata_Plate",d=sum_well, c="Image_Metadata_Well", e=c("Metadata_Plate","Metadata_Well","Count_TotalCells"), f = "Image_Count_Filtered_nuclei")
 #Sum Txrd-/EdU+ cells per well per plate
 somatic_edu <- apply_plate(a=somatic_edu,b="Image_Metadata_Plate",d=sum_well, c="Image_Metadata_Well", e=c("Metadata_Plate","Metadata_Well","Count_edu"), f = "Image_Count_Filtered_somatics")
-#Sum double positive cells per well per plate
-double <- apply_plate(a=double,b="Image_Metadata_Plate",d=sum_well, c="Image_Metadata_Well", e=c("Metadata_Plate","Metadata_Well","Count_double"), f = "Image_Count_ACRV1_EdU")
+
 
 if (cpa_file_answer == "Yes"){
 #Sum ACRV1 cells per well per plate
 ACRV1 <- apply_plate(a=ACRV1,b="Image_Metadata_Plate",d=sum_well, c="Image_Metadata_Well", e=c("Metadata_Plate","Metadata_Well","Count_ACRV1"), f = "Positive..Cell.Count")
+#Sum double positive cells per well per plate
+double <- apply_plate(a=double,b="Image_Metadata_Plate",d=sum_well, c="Image_Metadata_Well", e=c("Metadata_Plate","Metadata_Well","Count_double"), f = "Positive..Cell.Count")
 }else{
 #Sum ACRV1DD4+ cells per well per plate
 ACRV1 <- apply_plate(a=ACRV1,b="Image_Metadata_Plate",d=sum_well, c="Image_Metadata_Well", e=c("Metadata_Plate","Metadata_Well","Count_ACRV1"), f = "Image_Count_ACRV1")
+#Sum double positive cells per well per plate
+double <- apply_plate(a=double,b="Image_Metadata_Plate",d=sum_well, c="Image_Metadata_Well", e=c("Metadata_Plate","Metadata_Well","Count_double"), f = "Image_Count_ACRV1_EdU")
 }
 ```
 
