@@ -5,7 +5,8 @@ library(xlsx)
 library(DBI)
 library(RSQLite)
 
-#Get folder with images
+#Get path to database
+database.path <- rstudioapi::selectFile()
 file_path <- rstudioapi::selectDirectory()
 
 #Subset "args" based on known delimiters to get user set variables for the rest of the script
@@ -13,99 +14,18 @@ channels <- c("DNA","EdU","DDX4")
 format_columns <- c("Count_Filterednuclei","Count_Filtered_somatics","Count_Combined_DDX4","Count_CombinedObjects","Count_cytoDDX4_EdU")
 name_columns <- c("Hoechst+","Hoechst+_EdU+_cytoDDX4-","Hoechst+_DDX4+","Hoechst+_cytoDDX4+","Hoechst+_cytoDDX4+_EdU+")
 
-#Get all csv files in folder
-filenames <- list.files(path=file_path, pattern = "*.csv", full.names = TRUE, recursive = TRUE)
-#Get unique csv file types
-split_filenames <- strsplit(filenames, "_")
-temp <- split_filenames[[1]]
-file_types <- temp[length(temp)]
-for (i in 2:length(split_filenames)){
-  temp <- split_filenames[[i]]
-  file_types[length(file_types)+1] <- temp[length(temp)]
-}
-u.patterns <- unique(file_types)
-
-lf <- list()
-#Group all files of the same type into one file
-for (pattern in 1:length(u.patterns)){
-  #gets the files matching pattern.
-  filenames <- list.files(path=file_path, pattern = paste0('*',u.patterns[pattern]), full.names = TRUE, recursive = TRUE)
-  file <- gsub(".csv", "", u.patterns[pattern])
-  #Load all files as data frames in the list of data frames "ldf".
-  ldf <- lapply(filenames, read.csv)
-  #Create data frame to store all results in.
-  df <- ldf[[1]]
-  #Loop through each data frame in the list of data frames and add them to the end of the empty data frame.
-  for (data_frame in 2:length(ldf)){
-    df <- rbind(df, ldf[[data_frame]])
-  }
-  #Reorder df by image number
-  logic <- unique(colnames(df) %in% "ImageNumber")
-  if (length(logic) > 1){
-    df <- df[order(df[,"ImageNumber"]),]  
-  }
-  lf[[pattern]] <- df
-  names(lf)[pattern] <- file
-  #Get time to use as unique file name
-  time <- as.character(Sys.time())
-  #Remove spaces and special characters from time
-  time <- gsub(" ", "_", time)
-  time <- gsub(":", "-", time)
-  type <- vector()
-  for (i in 1:length(channels)){type <- paste0(type, "_", channels[i])}
-  #Save data frame with raw values from each file.
-  write.csv(df, file=paste0(file_path,"/counts/",time,"_", file, type, ".csv"), row.names = FALSE)
-}
-
-#Create database with image and object information
-#Get image data_frame and add to database
-#Create path to database and connect to database.
-db_path <- paste0(file_path, "/counts/",time,"_database.db")
-con <- dbConnect(RSQLite::SQLite(), db_path)
-tdf <- lf[[grep("Image",names(lf))]]
-#Add "Image" to the beginning of all the column names for cellprofiler"
-columns <- colnames(tdf)
-for(column in 1:length(columns)){
-  if (columns[column] != "ImageNumber" & columns[column] != "ImageSet_ImageSet") {
-    columns[column] <- paste0("Image_", columns[column])
-  }
-}
-colnames(tdf) <- columns
-#Write data to database and disconnect
-dbWriteTable(con, "MyExpt_Per_Image", tdf, overwrite = TRUE)
+#Read image data from database
+#Open connection to data base
+con <- dbConnect(RSQLite::SQLite(), database.path)
+#Get table of data frames in data base
+Tables <- as.data.frame(dbListTables(con))
+#Get name of data frame with per image counts
+Table <- as.data.frame(grep("Per_Image", Tables[,1], value = TRUE))
+Table <- as.data.frame(grep("Per_Image_", Table[,1], value = TRUE, invert = TRUE))
+#Create new object with data frame of per image counts
+image.data <- dbReadTable(con, Table[[1]])
+#Close connection to data base
 dbDisconnect(con)
-#Get data frames with object data
-names <- vector()
-for (data_frame in 1:length(lf)){
-  logic <- grep("ObjectNumber",colnames(lf[[data_frame]]))
-  if (length(logic) > 0){
-    names <- append(names, names(lf[data_frame]))
-  }
-}
-#Combine data frames with object data
-for (name in 1:length(names)){
-  tdf <- lf[[names[name]]]
-  columns <- colnames(tdf)
-  for (column in 1:length(columns)){
-    if (columns[column] != "ImageNumber" & columns[column] != "ObjectNumber"){
-      columns[column] <- paste0(names[name], "_", columns[column])
-    }
-  }
-  colnames(tdf) <- columns
-  if (name == 1){
-    df <- tdf
-  } else {
-    df <- cbind(df, tdf)
-  }
-}
-df <- df[, !duplicated(colnames(df))]
-#Write file with combined object data
-write.csv(df, paste0(file_path, "/counts/",time,"_object_data.csv"))
-#Write object data to database
-con <- dbConnect(RSQLite::SQLite(), db_path)
-dbWriteTable(con, "MyExpt_Per_Object", df, overwrite = TRUE)
-dbDisconnect(con)
-print("New database complete")
 
 #Get image data to get counts per image
 image.data <- lf[[grep("Image",names(lf))]]
@@ -212,11 +132,20 @@ for (i in 1:length(per_plate)){
   write.xlsx2(save,file)
 }
 
+
 #Check if there is relationship data
-logic <- grep("relationship", names(lf))
+logic <- grep("relationship", Tables)
 if (logic > 1){
-#Get relationship data from list of data frames
-Per_RelationshipsView <- lf[[grep("relationship", names(lf))]]
+#Get object relationship data
+#Open data base connection
+con <- dbConnect(RSQLite::SQLite(), database.path)
+#Get name of relationshipsview data frame
+Table <- as.data.frame(grep("RelationshipsView", Tables[,1], value = TRUE))
+#Get relationshipsview data frame
+Per_RelationshipsView <- dbReadTable(con, Table[1,1])
+#Close data base connection
+dbDisconnect(con)
+
 #Get Neighbor relationships
 Neighbors <- Per_RelationshipsView[Per_RelationshipsView$Relationship == "Neighbors",]
 #Create data frame to store output
