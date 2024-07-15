@@ -1,0 +1,68 @@
+---
+title: "Segment nuclei with stardist"
+output: html_notebook
+---
+
+#Setup python
+```{r}
+library(reticulate)
+use_python("C:/Users/olsen/AppData/Local/Programs/Python/Python38")
+```
+
+#Select folder with your images
+```{r}
+indir <- rstudioapi::selectDirectory()
+```
+
+#Import all necessary python modules
+```{python}
+#Import modules for converting tif to numpy array
+from PIL import Image
+import numpy as np
+
+#Import modules for processing folders
+import sys
+from PIL import Image
+import numpy as np
+import os
+from os import listdir
+from stardist.models import StarDist2D
+from csbdeep.utils import normalize
+from csbdeep.io import save_tiff_imagej_compatible
+```
+
+#Reticulate r object to python
+```{python}
+input_directory = r.indir
+indir = input_directory + "/"
+```
+
+
+#Get all files in selected folder 
+```{python}
+infiles = os.listdir(indir)
+```
+
+#Get pretrained model
+```{python}
+model = StarDist2D.from_pretrained('2D_versatile_fluo')
+```
+
+#Loop stardist through each file in choosen directory
+```{python}
+for INFILE in infiles:
+    if INFILE[-6:] != 'd0.TIF':
+        continue
+    INPUTS = indir + INFILE
+    IMG=Image.open(INPUTS)
+    IMG_ARRAY = np.asarray(IMG)
+    labels,polygons=model.predict_instances(normalize(IMG_ARRAY))
+    OUTFILE=INPUTS[:-4]
+    save_tiff_imagej_compatible('%s_labels.tif' % OUTFILE, labels, axes='YX')
+```
+
+#quit python connection
+```{python}
+exit
+#Need to restart r after closing connection in order to reopen connection
+```
