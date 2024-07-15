@@ -6,6 +6,7 @@ output: html_notebook
 #Setup python
 ```{r}
 library(reticulate)
+#Set to location of python on your machine
 use_python("C:/Users/olsen/AppData/Local/Programs/Python/Python38")
 ```
 
@@ -16,10 +17,6 @@ indir <- rstudioapi::selectDirectory()
 
 #Import all necessary python modules
 ```{python}
-#Import modules for converting tif to numpy array
-from PIL import Image
-import numpy as np
-
 #Import modules for processing folders
 import sys
 from PIL import Image
